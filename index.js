@@ -8,11 +8,18 @@ const tokenTelegram = process.env.TELEGRAM_TOKEN;
 const bot = new TelegramBot(tokenTelegram, { polling: false });
 const chatId = '-1001591609440';
 
+let lastMessage = '';
+
 client.on('message', (mess) => {
-  setTimeout(() => {
     if (mess.author.id === process.env.BOTPAGO_TOKEN) {
-      const mensagem = `00 - 25 🌿 ${mess.embeds[0].fields[0].name}: ${mess.embeds[0].fields[0].value} 💦`;
-      bot.sendMessage(chatId, mensagem)
+      const mensagem = `===🌿Reset em 8 segundos💦=== \n ${mess.embeds[0].fields[0].name}: ${mess.embeds[0].fields[0].value} \n Link ${mess.embeds[0].fields[1].value}`;
+      if (mensagem === lastMessage) {
+        return null;
+      }
+      else {
+        bot.sendMessage(chatId, mensagem);
+        lastMessage = mensagem;
+      }
     }
   
     if (mess.author.id === process.env.BOTFREE_TOKEN) {
@@ -20,10 +27,9 @@ client.on('message', (mess) => {
       const inicial = msg.indexOf('(');
       const final = msg.indexOf(')')
       const data = msg.slice(inicial, final + 1);
-      const mensagem = `25 - 50 🌿 Coordenada: ${data}💦`;
+      const mensagem = `🌿 Coordenada: ${data}💦`;
       bot.sendMessage(chatId, mensagem)
     }
-  }, 2000);
 })
 
 client.login(token);
